@@ -4,12 +4,15 @@ function easyHTTP(){
 }
 
 // Make an HTTP GET Request
-easyHTTP.prototype.get = function(url) {
+easyHTTP.prototype.get = function(url, callback) {
   this.http.open('GET', url, true);
-  // this.http.onload = function will error, arrow function works
-  this.http.onload = () => {
-    if(this.http.status === 200){
-      console.log(this.http.responseText);
+  let self = this;
+  // this.http.onload = function will error, arrow function works, must set a variable
+  this.http.onload = function() {
+    if(self.http.status === 200){
+      callback(null, self.http.responseText);
+    } else {
+      callback('Error: ' + self.http.status);
     }
   }
   this.http.send();
